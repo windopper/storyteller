@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 import java.util.function.Consumer;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.LOCAL_VARIABLE)
+@Target(ElementType.MODULE)
 public @interface StageDetailSequence {
     int progress();
 }

@@ -1,18 +1,15 @@
 package Main;
 
-import Annotation.Quest;
+import Quest.Quest;
 import Core.CoreData;
 import Core.Memory;
-import com.google.common.reflect.Reflection;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.util.Set;
-
-import static org.reflections.scanners.Scanners.TypesAnnotated;
 
 public class Initialize {
     void registerCoreData() {
@@ -26,12 +23,14 @@ public class Initialize {
 
         Reflections ref = new Reflections(new ConfigurationBuilder()
                 .forPackage("")
-                .setScanners(TypesAnnotated));
+                .setScanners(Scanners.SubTypes));
 
-        Set<Class<?>> classes = ref.getTypesAnnotatedWith(Quest.class);
-        for(Class<?> clazz : classes) {
-            String questName = clazz.getAnnotation(Quest.class).questName();
-            Memory.registerQuest(questName, clazz);
+//        Set<Class<?>> classes = ref.getTypesAnnotatedWith(Quest.class);
+        Set<Class<? extends Quest>> classes = ref.getSubTypesOf(Quest.class);
+        for(Class<? extends Quest> clazz : classes) {
+//            String questName = clazz.getAnnotation(Quest.class).questName();
+            String questName = clazz.getName();
+            Memory.registerQuest(clazz);
             System.out.println(questName+" is registered in memory");
         }
     }

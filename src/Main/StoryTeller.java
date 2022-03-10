@@ -1,5 +1,7 @@
 package Main;
 
+import Events.InteractListener;
+import Scheduler.CoreScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,6 +12,7 @@ public class StoryTeller extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(new Events.Listener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
         super.onEnable();
         init();
     }
@@ -28,6 +31,10 @@ public class StoryTeller extends JavaPlugin implements Listener {
     public void init() {
         Initialize initialize = new Initialize();
         initialize.registerCoreData();
+        initialize.loadQuest();
+
+        CoreScheduler coreScheduler = new CoreScheduler();
+        coreScheduler.initialize();
     }
 
     public void fin() {

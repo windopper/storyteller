@@ -1,14 +1,15 @@
 package Core;
 
+import Quest.Quest;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CoreData {
 
     private final Player player;
-    private List<Class<?>> questList = new ArrayList<>();
+    private final Set<Quest> quests = new HashSet<>();
 
     public CoreData(Player player) {
         this.player = player;
@@ -22,5 +23,7 @@ public class CoreData {
     }
 
     public void remove() { Memory.coreDatas.remove(player); }
+
+    public Set<Quest> getQuests() { return quests; }
 
 }

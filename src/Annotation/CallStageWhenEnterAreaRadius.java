@@ -1,16 +1,21 @@
 package Annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
+@Repeatable(value = CallStageWhenEnterAreaRadiusContainer.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenEnterAreaRadius {
+    int[] stageToCall();
     String worldName();
     double x();
     double y();
     double z();
     double radius();
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@interface CallStageWhenEnterAreaRadiusContainer {
+    CallStageWhenEnterAreaRadius[] value();
 }

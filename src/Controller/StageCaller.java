@@ -3,7 +3,7 @@ package Controller;
 import Annotation.CallStageWhenEnterAreaRadius;
 import Annotation.CallStageWhenEnterAreaRectangle;
 import Annotation.StageSequence;
-import Quest.Quest;
+import Quest.StoryTellerQuest;
 import Utils.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,10 +13,10 @@ import org.bukkit.util.Vector;
 import java.lang.reflect.Method;
 
 public class StageCaller {
-    public static void callStageWhenEnterAreaRadius(Player player, Quest quest, Method method) {
+    public static void callStageWhenEnterAreaRadius(Player player, StoryTellerQuest storyTellerQuest, Method method) {
 
-        int progress = quest.progress;
-        int detailProgress = quest.detailProgress;
+        int progress = storyTellerQuest.stage;
+        int detailProgress = storyTellerQuest.detailProgress;
 
         StageSequence stageSequence = method.getAnnotation(StageSequence.class);
         if(stageSequence == null) return;
@@ -25,7 +25,7 @@ public class StageCaller {
 
         for(CallStageWhenEnterAreaRadius l_c : l_cs) {
 
-            int[] targetDetailProgress = l_c.stageToCall();
+            int[] targetDetailProgress = l_c.progressToCall();
             String world = l_c.worldName();
             double radius = l_c.radius();
             double x = l_c.x();
@@ -37,12 +37,12 @@ public class StageCaller {
                 if(detailProgress + 1 != i) continue;
                 if(LocationUtils.isPlayerInArea(player, location, radius)) {
                     try {
-                        method.invoke(quest);
+                        method.invoke(storyTellerQuest);
                         if(stageSequence.finalProgress() == detailProgress) {
-                            quest.detailProgress = 0;
-                            quest.progress++;
+                            storyTellerQuest.detailProgress = 0;
+                            storyTellerQuest.stage++;
                         }
-                        else quest.detailProgress ++;
+                        else storyTellerQuest.detailProgress ++;
                         return;
                     }
                     catch(Exception e) {
@@ -53,10 +53,10 @@ public class StageCaller {
         }
     }
 
-    public static void callStageWhenEnterAreaRectangle(Player player, Quest quest, Method method) {
+    public static void callStageWhenEnterAreaRectangle(Player player, StoryTellerQuest storyTellerQuest, Method method) {
 
-        int progress = quest.progress;
-        int detailProgress = quest.detailProgress;
+        int progress = storyTellerQuest.stage;
+        int detailProgress = storyTellerQuest.detailProgress;
 
         StageSequence stageSequence = method.getAnnotation(StageSequence.class);
         if(stageSequence == null) return;
@@ -65,7 +65,7 @@ public class StageCaller {
 
         for(CallStageWhenEnterAreaRectangle l_c : l_cs) {
 
-            int[] targetDetailProgress = l_c.stageToCall();
+            int[] targetDetailProgress = l_c.progressToCall();
             String world = l_c.worldName();
             double x = l_c.x();
             double y = l_c.y();
@@ -81,12 +81,12 @@ public class StageCaller {
                 if(detailProgress + 1 != i) continue;
                 if(LocationUtils.isPlayerInArea(player, location, vector)) {
                     try {
-                        method.invoke(quest);
+                        method.invoke(storyTellerQuest);
                         if(stageSequence.finalProgress() == detailProgress) {
-                            quest.detailProgress = 0;
-                            quest.progress++;
+                            storyTellerQuest.detailProgress = 0;
+                            storyTellerQuest.stage++;
                         }
-                        else quest.detailProgress ++;
+                        else storyTellerQuest.detailProgress ++;
                         return;
                     }
                     catch(Exception e) {

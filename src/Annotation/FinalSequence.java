@@ -5,14 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** 퀘스트 시작 조건 메소드에 주입하는 어노테이션입니다
- *
- *
- *
- *
- */
-@Retention(RetentionPolicy.RUNTIME)
+/** 모든 퀘스트 스테이지가 끝났을 경우 실행됨 */
+@StoryTellerAnnotation
 @Target(ElementType.METHOD)
-public @interface QuestStartCondition {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface FinalSequence {
 
 }

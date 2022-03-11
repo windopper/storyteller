@@ -1,5 +1,5 @@
 # storyteller
-simple API for implementing quest
+simple API for implementing storyTellerQuest
 
 
 version support

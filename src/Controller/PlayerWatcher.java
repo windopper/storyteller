@@ -1,14 +1,10 @@
 package Controller;
 
-import Annotation.CallStageWhenEnterAreaRadius;
-import Annotation.QuestStartCondition;
-import Annotation.StageSequence;
+import Annotation.QuestProgressCondition;
 import Core.CoreData;
 import Core.Memory;
-import Quest.Quest;
-import Utils.LocationUtils;
+import Quest.StoryTellerQuest;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
@@ -21,21 +17,21 @@ public class PlayerWatcher {
             CoreData coreData = Memory.getCoreData(player);
 
             // 감지된 사용자 지정 퀘스트
-            Set<Class<? extends Quest>> quests = Memory.getQuests();
+            Set<Class<? extends StoryTellerQuest>> quests = Memory.getQuests();
 
             // 플레이어의 퀘스트
-            Set<Quest> playersQuests = coreData.getQuests();
+            Set<? extends StoryTellerQuest> playersStoryTellerQuests = coreData.getQuests();
 
             // 완료되지 않은 퀘스트
-            Set<Quest> unfinishedQuests = playersQuests.stream()
-                    .filter(q -> q.progress != -1).collect(Collectors.toSet());
+            Set<? extends StoryTellerQuest> unfinishedStoryTellerQuests = playersStoryTellerQuests.stream()
+                    .filter(q -> q.stage != -1).collect(Collectors.toSet());
 
             // 퀘스트 시작을 할 수 있는 퀘스트
-            Set<Quest> validQuests = unfinishedQuests.stream()
+            Set<? extends StoryTellerQuest> validStoryTellerQuests = unfinishedStoryTellerQuests.stream()
                     .filter(q -> {
                         for(Method method : q.getClass().getDeclaredMethods()) {
-                            QuestStartCondition questStartCondition = method.getAnnotation(QuestStartCondition.class);
-                            if(questStartCondition == null) continue;
+                            QuestProgressCondition questProgressCondition = method.getAnnotation(QuestProgressCondition.class);
+                            if(questProgressCondition == null) continue;
                             try {
                                 method.setAccessible(true);
                                 return (boolean) method.invoke(q);
@@ -49,15 +45,16 @@ public class PlayerWatcher {
                     }).collect(Collectors.toSet());
 
             // 퀘스트 진행을 하기 위한 조건 탐색
-            for(Quest quest : validQuests) {
+            for(StoryTellerQuest storyTellerQuest : validStoryTellerQuests) {
 
-                Method[] methods = quest.getClass().getDeclaredMethods();
+                Method[] methods = storyTellerQuest.getClass().getDeclaredMethods();
+
+                QuestCaller.getRewardIfSatisfied(storyTellerQuest);
 
                 for(Method method : methods) {
-
                     method.setAccessible(true);
-                    StageCaller.callStageWhenEnterAreaRadius(player, quest, method);
-                    StageCaller.callStageWhenEnterAreaRectangle(player, quest, method);
+                    StageCaller.callStageWhenEnterAreaRadius(player, storyTellerQuest, method);
+                    StageCaller.callStageWhenEnterAreaRectangle(player, storyTellerQuest, method);
                     method.setAccessible(false);
                 }
             }

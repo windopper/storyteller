@@ -1,6 +1,6 @@
 package Main;
 
-import Quest.Quest;
+import Quest.StoryTellerQuest;
 import Core.CoreData;
 import Core.Memory;
 import org.bukkit.Bukkit;
@@ -21,14 +21,13 @@ public class Initialize {
     void loadQuest() {
         System.out.println("loadQuest...");
 
+        // Quest 클래스를 상속한 모든 클래스를 메모리에 저장
         Reflections ref = new Reflections(new ConfigurationBuilder()
                 .forPackage("")
                 .setScanners(Scanners.SubTypes));
 
-//        Set<Class<?>> classes = ref.getTypesAnnotatedWith(Quest.class);
-        Set<Class<? extends Quest>> classes = ref.getSubTypesOf(Quest.class);
-        for(Class<? extends Quest> clazz : classes) {
-//            String questName = clazz.getAnnotation(Quest.class).questName();
+        Set<Class<? extends StoryTellerQuest>> classes = ref.getSubTypesOf(StoryTellerQuest.class);
+        for(Class<? extends StoryTellerQuest> clazz : classes) {
             String questName = clazz.getName();
             Memory.registerQuest(clazz);
             System.out.println(questName+" is registered in memory");

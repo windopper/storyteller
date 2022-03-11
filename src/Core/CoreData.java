@@ -1,6 +1,6 @@
 package Core;
 
-import Quest.Quest;
+import Quest.StoryTellerQuest;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import java.util.Set;
 public class CoreData {
 
     private final Player player;
-    private final Set<Quest> quests = new HashSet<>();
+    private final Set<? extends StoryTellerQuest> storyTellerQuests = new HashSet<>();
 
     public CoreData(Player player) {
         this.player = player;
@@ -24,6 +24,6 @@ public class CoreData {
 
     public void remove() { Memory.coreDatas.remove(player); }
 
-    public Set<Quest> getQuests() { return quests; }
+    public Set<? extends StoryTellerQuest> getQuests() { return storyTellerQuests; }
 
 }

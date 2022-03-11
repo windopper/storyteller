@@ -1,14 +1,13 @@
 package Annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
+@StoryTellerAnnotation
+@Repeatable(CallStageWhenEnterAreaRectangleContainer.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenEnterAreaRectangle {
-    int[] stageToCall();
+    int[] progressToCall();
     String worldName();
     double x();
     double y();
@@ -16,4 +15,10 @@ public @interface CallStageWhenEnterAreaRectangle {
     double dx();
     double dy();
     double dz();
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@interface CallStageWhenEnterAreaRectangleContainer {
+    CallStageWhenEnterAreaRectangle[] value();
 }

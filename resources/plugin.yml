@@ -1,0 +1,10 @@
+main: Main.StoryTeller
+name: storyteller
+version: 0.1
+api-version: 1.17
+author: kamilereon
+description: simple framework / plugin for implementing quest system
+commands:
+  st:
+    description: command prefix for storyteller
+    usage: /st

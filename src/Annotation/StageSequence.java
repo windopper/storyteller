@@ -5,6 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+    해당 스테이지의 단계와 세부진행단계에 대한 정보를 알려주는 어노테이션
+
+ */
+@StoryTellerAnnotation
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StageSequence {

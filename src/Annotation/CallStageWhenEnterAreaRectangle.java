@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenEnterAreaRectangle {
-    int[] progressToCall();
+    int[] progressToCall() default 0;
     String worldName();
     double x();
     double y();
@@ -17,8 +17,3 @@ public @interface CallStageWhenEnterAreaRectangle {
     double dz();
 }
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface CallStageWhenEnterAreaRectangleContainer {
-    CallStageWhenEnterAreaRectangle[] value();
-}

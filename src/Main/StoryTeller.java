@@ -34,16 +34,16 @@ public class StoryTeller extends JavaPlugin implements Listener {
 
     public void init() {
 
-        Initialize initialize = new Initialize();
-        initialize.registerCoreData();
+        Initializer initializer = new Initializer();
+        initializer.registerCoreData();
 
-        initialize.loadQuest();
+        initializer.loadQuest();
 
         CoreScheduler coreScheduler = new CoreScheduler();
         coreScheduler.initialize();
     }
 
     public void fin() {
-        Finalize finalize = new Finalize();
+        Finalizer finalize = new Finalizer();
     }
 }

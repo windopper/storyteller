@@ -11,12 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenRightClickEntity {
-    int[] progressToCall();
+    int[] progressToCall() default 0;
     String entityName();
 }
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface CallStageWhenRightClickEntityContainer {
-    CallStageWhenRightClickEntity[] value();
-}

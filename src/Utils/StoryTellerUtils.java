@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,10 +23,11 @@ public class StoryTellerUtils {
     public static boolean uploadQuestData(Player player, String json) {
         CoreData coreData = CoreData.getOrCreateCoreData(player);
         Set<? extends StoryTellerQuest> quests = coreData.getQuests();
-        ObjectMapper mapper = new ObjectMapper();
 
         try {
-            StoryTellerQuest storyTellerQuest = mapper.readValue(json, StoryTellerQuest.class);
+            JSONParser jsonParser = new JSONParser();
+            Object obj = jsonParser.parse(json);
+            JSONObject jsonObj = (JSONObject) obj;
             return true;
         }
         catch(Exception e) {

@@ -2,12 +2,15 @@ package Annotation;
 
 import java.lang.annotation.*;
 
-@StoryTellerAnnotation
+/**
+    해당 위치 안에 플레이어가 감지되면 발동하는 어노테이션
+ */
+ @StoryTellerAnnotation
 @Repeatable(value = CallStageWhenEnterAreaRadiusContainer.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenEnterAreaRadius {
-    int[] progressToCall();
+    int[] progressToCall() default 0;
     String worldName();
     double x();
     double y();
@@ -15,8 +18,3 @@ public @interface CallStageWhenEnterAreaRadius {
     double radius();
 }
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface CallStageWhenEnterAreaRadiusContainer {
-    CallStageWhenEnterAreaRadius[] value();
-}

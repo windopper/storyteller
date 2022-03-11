@@ -3,7 +3,6 @@ package Controller;
 import Annotation.FinalSequence;
 import Annotation.StageSequence;
 import Quest.StoryTellerQuest;
-import Utils.StoryTellerUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -12,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QuestCaller {
-    public static void getRewardIfSatisfied(StoryTellerQuest storyTellerQuest) {
+    public static void callFinalSequence(StoryTellerQuest storyTellerQuest) {
 
         // 최종 스테이지 단계와 스테이지의 최종 진행 단계를 확인
         Optional<StageSequence> endStageSequence = StageHelper.getEndStageSequence(storyTellerQuest);
@@ -26,9 +25,8 @@ public class QuestCaller {
         int finalStage = stageSequence.stage();
         int finalProgress = stageSequence.finalProgress();
 
-        // 마지막 스테이지와 현재 스테이지가 같고
-        // 현재 마지막 진행일때
-        if(currentStage == finalStage && currentDetailProgress == finalProgress) {
+        // 마지막 progress 가 실행되어 다음 스테이지로 넘어갔다면
+        if(currentStage > finalStage) {
             Set<Method> rewardMethods = Arrays.stream(methods).filter(m -> m.getAnnotation(FinalSequence.class) != null).collect(Collectors.toSet());
             rewardMethods.forEach(rewardMethod -> {
                 try {

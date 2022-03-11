@@ -9,7 +9,7 @@ import java.util.Set;
 public class CoreData {
 
     private final Player player;
-    private final Set<? extends StoryTellerQuest> storyTellerQuests = new HashSet<>();
+    private Set<? extends StoryTellerQuest> storyTellerQuests = new HashSet<>();
 
     public CoreData(Player player) {
         this.player = player;
@@ -25,5 +25,7 @@ public class CoreData {
     public void remove() { Memory.coreDatas.remove(player); }
 
     public Set<? extends StoryTellerQuest> getQuests() { return storyTellerQuests; }
+
+    public void setQuests(Set<? extends StoryTellerQuest> storyTellerQuests) { this.storyTellerQuests = storyTellerQuests; }
 
 }

@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.lang.reflect.Field;
+
 public class InteractListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
@@ -44,6 +46,7 @@ public class InteractListener implements Listener {
             @Override
             public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) throws Exception {
                 if(packet instanceof PacketPlayInUseEntity packetPlayInUseEntity) {
+                    int entityId = (int) getValue(packetPlayInUseEntity, "a");
                     Bukkit.broadcastMessage("2");
                 }
 
@@ -53,5 +56,19 @@ public class InteractListener implements Listener {
 
         ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().b.a.k.pipeline();
         pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);
+    }
+
+    private Object getValue(Object object, String fieldName) {
+        Object result = null;
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            result = field.get(object);
+            field.setAccessible(false);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

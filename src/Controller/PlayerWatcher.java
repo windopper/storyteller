@@ -49,7 +49,7 @@ public class PlayerWatcher {
 
                 Method[] methods = storyTellerQuest.getClass().getDeclaredMethods();
 
-                QuestCaller.getRewardIfSatisfied(storyTellerQuest);
+                QuestCaller.callFinalSequence(storyTellerQuest);
 
                 for(Method method : methods) {
                     method.setAccessible(true);

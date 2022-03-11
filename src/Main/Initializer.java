@@ -9,9 +9,11 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class Initialize {
+public class Initializer {
     void registerCoreData() {
         for(Player player : Bukkit.getOnlinePlayers()) {
             CoreData.getOrCreateCoreData(player);
@@ -32,5 +34,22 @@ public class Initialize {
             Memory.registerQuest(clazz);
             System.out.println(questName+" is registered in memory");
         }
+    }
+
+    public void initAllQuest(Player player) {
+        Set<? extends StoryTellerQuest> registeredQuests = Memory.getQuests().stream()
+                        .map(q -> {
+                            try {
+                                return q.getConstructor(Player.class).newInstance(player);
+                            }
+                            catch(Exception e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Memory.getCoreData(player).setQuests(registeredQuests);
     }
 }

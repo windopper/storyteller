@@ -13,12 +13,12 @@ import java.util.Optional;
 public abstract class StoryTellerQuest implements Serializable {
 
     /**
-        <p>progress = 0 || not started</p>
-        <p>progress = -1 || quest finished</p>
-        <p>detailProgress == 0 || not started</p>
+        <p>stage = 1 || not started</p>
+        <p>stage = -1 || quest finished</p>
+        <p>detailProgress == 1 || not started</p>
      */
-    public int stage = 0;
-    public int detailProgress = 0;
+    public int stage = 1;
+    public int detailProgress = 1;
     @JsonIgnore
     transient public final Player player;
 

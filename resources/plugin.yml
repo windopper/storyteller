@@ -3,7 +3,7 @@ name: storyteller
 version: 0.1
 api-version: 1.17
 author: kamilereon
-description: simple framework / plugin for implementing quest system
+description: simple framework / plugin for implementing com.kamilereon.storyteller.quest system
 commands:
   st:
     description: command prefix for storyteller

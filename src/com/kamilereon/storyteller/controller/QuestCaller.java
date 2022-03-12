@@ -27,12 +27,15 @@ public class QuestCaller {
 
         // 마지막 progress 가 실행되어 다음 스테이지로 넘어갔다면
         if(currentStage > finalStage) {
-            Set<Method> rewardMethods = Arrays.stream(methods).filter(m -> m.getAnnotation(FinalSequence.class) != null).collect(Collectors.toSet());
+            Set<Method> rewardMethods = Arrays.stream(methods)
+                    .filter(m -> m.getAnnotation(FinalSequence.class) != null)
+                    .collect(Collectors.toSet());
+
             rewardMethods.forEach(rewardMethod -> {
                 try {
                     rewardMethod.setAccessible(true);
                     rewardMethod.invoke(storyTellerQuest);
-                    storyTellerQuest.detailProgress = 0;
+                    storyTellerQuest.detailProgress = 1;
                     storyTellerQuest.stage = -1;
                 }
                 catch(Exception e) {

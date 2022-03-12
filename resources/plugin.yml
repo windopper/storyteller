@@ -1,10 +1,10 @@
-main: Main.StoryTeller
+main: com.kamilereon.storyteller.main.StoryTeller
 name: storyteller
 version: 0.1
 api-version: 1.17
 author: kamilereon
 description: simple framework / plugin for implementing com.kamilereon.storyteller.quest system
 commands:
-  st:
+  story:
     description: command prefix for storyteller
-    usage: /st
+    usage: /story

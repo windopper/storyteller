@@ -1,5 +1,6 @@
 package com.kamilereon.storyteller.main;
 
+import com.kamilereon.storyteller.commands.MainCommands;
 import com.kamilereon.storyteller.events.InteractListener;
 import com.kamilereon.storyteller.schedulers.CoreScheduler;
 import org.bukkit.Bukkit;
@@ -14,13 +15,13 @@ public class StoryTeller extends JavaPlugin implements Listener {
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(new com.kamilereon.storyteller.events.Listener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
-        super.onEnable();
+
         init();
     }
 
     @Override
     public void onDisable() {
-        super.onDisable();
+
         fin();
     }
 
@@ -29,7 +30,9 @@ public class StoryTeller extends JavaPlugin implements Listener {
         Player player = (Player) sender;
         String commandName = command.getName();
 
-        return super.onCommand(sender, command, label, args);
+        MainCommands.Listener(player, commandName, args);
+
+        return true;
     }
 
     public void init() {
@@ -38,6 +41,10 @@ public class StoryTeller extends JavaPlugin implements Listener {
         initializer.registerCoreData();
 
         initializer.loadQuest();
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            initializer.initAllQuest(player);
+        }
 
         CoreScheduler coreScheduler = new CoreScheduler();
         coreScheduler.initialize();

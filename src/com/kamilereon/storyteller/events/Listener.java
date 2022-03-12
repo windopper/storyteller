@@ -1,6 +1,7 @@
 package com.kamilereon.storyteller.events;
 
 import com.kamilereon.storyteller.core.CoreData;
+import com.kamilereon.storyteller.main.Initializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -18,5 +19,7 @@ public class Listener implements org.bukkit.event.Listener {
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         CoreData.getOrCreateCoreData(player);
+        Initializer initializer = new Initializer();
+        initializer.initAllQuest(player);
     }
 }

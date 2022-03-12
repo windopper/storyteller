@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class StoryTellerUtils {
         }
     }
 
-    public static String getQuestDatasByJson(Player player) {
+    public static Optional<String> getQuestDatasByJson(Player player) {
         CoreData coreData = CoreData.getOrCreateCoreData(player);
         Set<StoryTellerQuest> quests = coreData.getQuests()
                 .stream()
@@ -41,12 +42,14 @@ public class StoryTellerUtils {
                 .collect(Collectors.toSet());
 
         ObjectMapper mapper = new ObjectMapper();
+        Optional<String> result = Optional.empty();
         try {
-            return mapper.writeValueAsString(quests);
+            result = Optional.of(mapper.writeValueAsString(quests));
+            return result;
         }
         catch(JsonProcessingException e) {
             e.printStackTrace();
-            return null;
+            return result;
         }
     }
 }

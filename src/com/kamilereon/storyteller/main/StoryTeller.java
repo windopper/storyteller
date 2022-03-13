@@ -1,56 +1,29 @@
 package com.kamilereon.storyteller.main;
 
-import com.kamilereon.storyteller.commands.MainCommands;
-import com.kamilereon.storyteller.events.InteractListener;
-import com.kamilereon.storyteller.schedulers.CoreScheduler;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import com.kamilereon.storyteller.core.Memory;
+import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.configuration.QuestFilter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class StoryTeller extends JavaPlugin implements Listener {
-    @Override
-    public void onEnable() {
-        Bukkit.getServer().getPluginManager().registerEvents(new com.kamilereon.storyteller.events.Listener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
+import java.util.Set;
+import java.util.stream.Collectors;
 
-        init();
+public class StoryTeller {
+    @SafeVarargs
+    public static void registerQuest(Class<? extends StoryTellerQuest> ...storyTellerQuests) {
+        Memory.registerQuest(storyTellerQuests);
     }
 
-    @Override
-    public void onDisable() {
-
-        fin();
+    public static Set<Class<? extends StoryTellerQuest>> getQuestList() {
+        return Memory.getQuests();
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player player = (Player) sender;
-        String commandName = command.getName();
-
-        MainCommands.Listener(player, commandName, args);
-
-        return true;
+    public static Set<? extends StoryTellerQuest> getQuestsFromPlayer(Player player) {
+        return Memory.getCoreData(player).getQuests();
     }
 
-    public void init() {
-
-        Initializer initializer = new Initializer();
-        initializer.registerCoreData();
-
-        initializer.loadQuest();
-
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            initializer.initAllQuest(player);
-        }
-
-        CoreScheduler coreScheduler = new CoreScheduler();
-        coreScheduler.initialize();
-    }
-
-    public void fin() {
-        Finalizer finalize = new Finalizer();
+    public static Set<? extends StoryTellerQuest> getQuestsFromPlayer(Player player, QuestFilter questFilter) {
+        Set<? extends StoryTellerQuest> quests = Memory.getCoreData(player).getQuests();
+        return quests.stream().filter(questFilter::test).collect(Collectors.toSet());
     }
 }

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Memory {
 
@@ -13,7 +14,8 @@ public class Memory {
 
     public static CoreData getCoreData(Player player) { return coreDatas.get(player); }
 
-    public static void registerQuest(Class<? extends StoryTellerQuest> quest) { quests.add(quest); }
+    @SafeVarargs
+    public static void registerQuest(Class<? extends StoryTellerQuest> ...quest) { quests.addAll(Arrays.stream(quest).collect(Collectors.toSet())); }
 
     public static Set<Class<? extends StoryTellerQuest>> getQuests() { return quests; }
 }

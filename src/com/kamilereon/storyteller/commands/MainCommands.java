@@ -1,10 +1,15 @@
 package com.kamilereon.storyteller.commands;
 
+import com.kamilereon.storyteller.configuration.Filters;
+import com.kamilereon.storyteller.configuration.QuestFilter;
 import com.kamilereon.storyteller.core.Memory;
+import com.kamilereon.storyteller.main.StoryTeller;
+import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import com.kamilereon.storyteller.utils.StoryTellerUtils;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
+import java.util.Set;
 
 public class MainCommands {
     public static void Listener(Player sender, String commandName, String[] args) {
@@ -18,6 +23,10 @@ public class MainCommands {
                     Memory.getQuests().forEach(q -> {
                         sender.sendMessage(q.getName());
                     });
+                }
+                else if(args[0].equals("possible")) {
+                    Set<? extends StoryTellerQuest> quests = StoryTeller.getQuestsFromPlayer(sender, new QuestFilter().setFilters(Filters.CAN_START));
+                    sender.sendMessage(quests.size()+"");
                 }
             }
         }

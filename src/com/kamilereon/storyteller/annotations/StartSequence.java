@@ -5,10 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** 모든 퀘스트 스테이지가 끝났을 경우 실행  */
-@StoryTellerAnnotation
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface FinalSequence {
+/**
+    StageSequence 의 stage 를 0으로 선언했을 때와 같은 효과
 
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface StartSequence {
+    int finalProgress();
 }

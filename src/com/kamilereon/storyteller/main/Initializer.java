@@ -5,42 +5,47 @@ import com.kamilereon.storyteller.core.CoreData;
 import com.kamilereon.storyteller.core.Memory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Initializer {
-    void registerCoreData() {
+    public void registerCoreData() {
         for(Player player : Bukkit.getOnlinePlayers()) {
             CoreData.getOrCreateCoreData(player);
         }
     }
 
-    void loadQuest() {
-//        Bukkit.broadcastMessage("loadQuest...");
-        System.out.println("loadQuest...");
-
-        // Quest 클래스를 상속한 모든 클래스를 메모리에 저장
-        FilterBuilder filterBuilder = new FilterBuilder();
-
-        Reflections ref = new Reflections(new ConfigurationBuilder()
-                .forPackage("")
-                .filterInputsBy(new FilterBuilder().excludePackage("org.reflections").excludePackage("org.slf4j"))
-                .setScanners(Scanners.SubTypes));
-
-        Set<Class<? extends StoryTellerQuest>> classes = ref.getSubTypesOf(StoryTellerQuest.class);
-        for(Class<? extends StoryTellerQuest> clazz : classes) {
-            String questName = clazz.getName();
-            Memory.registerQuest(clazz);
-//            Bukkit.broadcastMessage(questName+" is registered in memory");
-            System.out.println(questName+" is registered in memory");
-        }
-    }
+//    @Deprecated
+//    public void loadQuest() {
+////        Bukkit.broadcastMessage("loadQuest...");
+//        System.out.println("loadQuest...");
+//
+//        // Quest 클래스를 상속한 모든 클래스를 메모리에 저장
+//        FilterBuilder filterBuilder = new FilterBuilder();
+//
+//        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+//        for(StackTraceElement s : stackTraceElements) {
+//            System.out.println(s.getClassName());
+//        }
+//
+//        Reflections ref = new Reflections(new ConfigurationBuilder()
+//                .setUrls(ClasspathHelper.forPackage(""))
+//                .filterInputsBy(new FilterBuilder().excludePackage("org.bukkit")
+//                        .excludePackage("net.minecraft")
+//                        .excludePackage("com.kamilereon.storyteller"))
+//                .setScanners(Scanners.SubTypes));
+//
+//        Set<Class<? extends StoryTellerQuest>> classes = ref.getSubTypesOf(StoryTellerQuest.class);
+//        System.out.println(classes.size()+" found");
+//        for(Class<? extends StoryTellerQuest> clazz : classes) {
+//            String questName = clazz.getName();
+//            Memory.registerQuest(clazz);
+////            Bukkit.broadcastMessage(questName+" is registered in memory");
+//            System.out.println(questName+" is registered in memory");
+//        }
+//    }
 
     public void initAllQuest(Player player) {
         Set<? extends StoryTellerQuest> registeredQuests = Memory.getQuests().stream()

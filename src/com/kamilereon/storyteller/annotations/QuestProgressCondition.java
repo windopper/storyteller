@@ -2,7 +2,7 @@ package com.kamilereon.storyteller.annotations;
 
 import java.lang.annotation.*;
 
-/** 퀘스트 시작 조건 메소드에 주입하는 어노테이션
+/** 퀘스트 시작 조건 메소드에 주입
 
  */
 @StoryTellerAnnotation

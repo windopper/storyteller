@@ -1,4 +1,4 @@
-main: com.kamilereon.storyteller.main.StoryTeller
+main: com.kamilereon.storyteller.main.StoryTellerMain
 name: storyteller
 version: 0.1
 api-version: 1.17

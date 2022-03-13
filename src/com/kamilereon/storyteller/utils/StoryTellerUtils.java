@@ -1,16 +1,16 @@
 package com.kamilereon.storyteller.utils;
 
-import com.kamilereon.storyteller.core.CoreData;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kamilereon.storyteller.core.CoreData;
+import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class StoryTellerUtils {
 
@@ -36,15 +36,14 @@ public class StoryTellerUtils {
 
     public static Optional<String> getQuestDatasByJson(Player player) {
         CoreData coreData = CoreData.getOrCreateCoreData(player);
-        Set<StoryTellerQuest> quests = coreData.getQuests()
-                .stream()
-                .map(q -> (StoryTellerQuest) q)
-                .collect(Collectors.toSet());
+
+        HashMap<String, StoryTellerQuest> questSet = new HashMap<>();
+        coreData.getQuests().forEach(q -> questSet.put(q.getClass().getName(), q));
 
         ObjectMapper mapper = new ObjectMapper();
         Optional<String> result = Optional.empty();
         try {
-            result = Optional.of(mapper.writeValueAsString(quests));
+            result = Optional.of(mapper.writeValueAsString(questSet));
             return result;
         }
         catch(JsonProcessingException e) {

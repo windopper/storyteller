@@ -8,12 +8,18 @@ import java.io.Serializable;
 public abstract class StoryTellerQuest implements Serializable {
 
     /**
-        <p>stage = 1 || not started</p>
-        <p>stage = -1 || com.kamilereon.storyteller.quest finished</p>
-        <p>detailProgress == 1 || not started</p>
+        stage 가 -1이면 퀘스트 완료
+        stage 가 0이면 퀘스트 시작 전
+        stage 가 1이면 퀘스트 시작
+
+        detailProgress 가 finalSequence 에 도달하면 stage 업그레이드
+
+
      */
-    public int stage = 1;
+
+    public int stage = 0;
     public int detailProgress = 1;
+
     @JsonIgnore
     transient public final Player player;
 
@@ -21,9 +27,12 @@ public abstract class StoryTellerQuest implements Serializable {
         this.player = player;
     }
 
+    @JsonIgnore
     public boolean isFinished() { return stage == -1; }
 
+    @JsonIgnore
     public boolean isProgressing() { return stage >= 1; }
 
+    @JsonIgnore
     public boolean isNotStarted() { return stage == 0; }
 }

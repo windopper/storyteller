@@ -25,14 +25,20 @@ public class PlayerWatcher {
             // 퀘스트 진행을 하기 위한 조건 탐색
             for(StoryTellerQuest storyTellerQuest : validQuests) {
 
+                int stage = storyTellerQuest.stage;
+                int detailProgress = storyTellerQuest.detailProgress;
+
                 Method[] methods = storyTellerQuest.getClass().getMethods();
 
                 QuestCaller.callFinalSequence(storyTellerQuest);
 
                 for(Method method : methods) {
                     method.setAccessible(true);
+                    if(!StageHelper.isSequenceCorrect(stage, detailProgress, method)) continue;
+
                     StageCaller.callStageWhenEnterAreaRadius(player, storyTellerQuest, method);
                     StageCaller.callStageWhenEnterAreaRectangle(player, storyTellerQuest, method);
+                    StageCaller.callStageWhenConditionSatisfied(player, storyTellerQuest, method);
                     method.setAccessible(false);
                 }
             }

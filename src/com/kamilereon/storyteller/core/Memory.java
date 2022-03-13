@@ -1,5 +1,6 @@
 package com.kamilereon.storyteller.core;
 
+import com.kamilereon.storyteller.annotations.CallStageAfterTick;
 import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import org.bukkit.entity.Player;
 

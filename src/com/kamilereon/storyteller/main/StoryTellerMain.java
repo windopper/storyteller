@@ -1,6 +1,7 @@
 package com.kamilereon.storyteller.main;
 
 import com.kamilereon.storyteller.commands.MainCommands;
+import com.kamilereon.storyteller.controller.PlayerListener;
 import com.kamilereon.storyteller.events.InteractListener;
 import com.kamilereon.storyteller.quest.ExampleQuest;
 import com.kamilereon.storyteller.quest.ExampleQuest2;
@@ -15,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class StoryTellerMain extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
-        Bukkit.getServer().getPluginManager().registerEvents(new com.kamilereon.storyteller.events.Listener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
 
         init();

@@ -51,10 +51,16 @@ public class ExampleQuest extends StoryTellerQuest {
     }
 
     @CallStageWhenEnterAreaRadius(worldName = "world", x = 136, y = 74, z = 19, radius = 3)
+    @CallStageWhenConditionSatisfied(progressToCall = 3, targetMethodName = "condition2")
     @StageSequence(stage = 1, finalProgress = 10)
     public void stage1() {
         // separate detailProgress to case by case
     }
+
+    public boolean condition2() {
+        return true;
+    }
+
 
     // call when
     @FinalSequence

@@ -5,7 +5,6 @@ import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import com.kamilereon.storyteller.configuration.QuestFilter;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,7 @@ public class StoryTeller {
         return Memory.getQuests();
     }
 
-    public static Set<? extends StoryTellerQuest> getQuestsFromPlayer(Player player) {
+    public static Set<? extends StoryTellerQuest> getAllQuestsFromPlayer(Player player) {
         return Memory.getCoreData(player).getQuests();
     }
 

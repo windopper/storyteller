@@ -1,9 +1,10 @@
 package com.kamilereon.storyteller.controller;
 
-import com.kamilereon.storyteller.annotations.CallStageWhenEnterAreaRadius;
-import com.kamilereon.storyteller.annotations.CallStageWhenEnterAreaRectangle;
-import com.kamilereon.storyteller.annotations.StageSequence;
+import com.kamilereon.storyteller.annotations.*;
+import com.kamilereon.storyteller.core.CoreData;
+import com.kamilereon.storyteller.core.Memory;
 import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.schedulers.Schedule;
 import com.kamilereon.storyteller.utils.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,8 +18,6 @@ public class StageCaller {
 
         int stage = storyTellerQuest.stage;
         int detailProgress = storyTellerQuest.detailProgress;
-
-        if(!StageHelper.isCorrectSequence(stage, detailProgress, method)) return;
 
         int finalProgress = StageHelper.getFinalProgress(method);
 
@@ -36,27 +35,7 @@ public class StageCaller {
             Location location = new Location(Bukkit.getWorld(world), x, y, z);
 
             if(LocationUtils.isPlayerInArea(player, location, radius)) {
-                for(int i : targetDetailProgress) {
-                    // detailProgress 가 어노테이션이 가리키는 targetProgress 와 다르고 targetProgress 가 0이면 continue
-                    // targetProgress 가 0이라는 뜻은 어떤 detailProgress 에서도 실행된다는 뜻
-                    if(detailProgress != i && i != 0) continue;
-                    try {
-                        // 메서드 실행
-                        method.invoke(storyTellerQuest);
-                        // finalProgress 가 detailProgress 보다 작거나 같으면
-                        if(finalProgress <= detailProgress) {
-                            // 다음 stage 로 업데이트 후 detailProgress 를 초기화
-                            storyTellerQuest.detailProgress = 1;
-                            storyTellerQuest.stage++;
-                        }
-                        // 아직 마지막 스테이지에 도달하지 않았다면 detailProgress 를 업데이트
-                        else storyTellerQuest.detailProgress ++;
-                        return;
-                    }
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
             }
         }
     }
@@ -65,8 +44,6 @@ public class StageCaller {
 
         int stage = storyTellerQuest.stage;
         int detailProgress = storyTellerQuest.detailProgress;
-
-        if(!StageHelper.isCorrectSequence(stage, detailProgress, method)) return;
 
         int finalProgress = StageHelper.getFinalProgress(method);
 
@@ -87,25 +64,97 @@ public class StageCaller {
             Vector vector = new Vector(dx, dy, dz);
 
             if(LocationUtils.isPlayerInArea(player, location, vector)) {
-                for(int i : targetDetailProgress) {
-                    // detailProgress 가 어노테이션이 가리키는 targetProgress 와 다르고 targetProgress 가 0이면 continue
-                    // targetProgress 가 0이라는 뜻은 어떤 detailProgress 에서도 실행된다는 뜻
-                    if(detailProgress != i && i != 0) continue;
+                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+            }
+        }
+    }
+
+    //TODO NEED TEST
+    public static void callStageWhenConditionSatisfied(Player player, StoryTellerQuest storyTellerQuest, Method method) {
+        int stage = storyTellerQuest.stage;
+        int detailProgress = storyTellerQuest.detailProgress;
+
+        int finalProgress = StageHelper.getFinalProgress(method);
+
+        CallStageWhenConditionSatisfied[] l_cs = method.getAnnotationsByType(CallStageWhenConditionSatisfied.class);
+
+        for(CallStageWhenConditionSatisfied l_c : l_cs) {
+            int[] targetDetailProgress = l_c.progressToCall();
+            String name = l_c.targetMethodName();
+            try {
+                Method m = storyTellerQuest.getClass().getMethod(name);
+                boolean value = (boolean) m.invoke(storyTellerQuest);
+                if(value) {
+                    StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+                }
+            }
+            catch(Exception e) {
+
+            }
+        }
+    }
+
+    //TODO NEED TEST
+    public static void callStageWhenRightClickEntity(Player player, StoryTellerQuest storyTellerQuest, Method method, String entityName) {
+
+        int stage = storyTellerQuest.stage;
+        int detailProgress = storyTellerQuest.detailProgress;
+
+        int finalProgress = StageHelper.getFinalProgress(method);
+
+        CallStageWhenRightClickEntity[] l_cs = method.getAnnotationsByType(CallStageWhenRightClickEntity.class);
+
+        for(CallStageWhenRightClickEntity l_c : l_cs) {
+
+            int[] targetDetailProgress = l_c.progressToCall();
+            String name = l_c.entityName();
+            if(!name.equals(entityName)) continue;
+
+            StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+        }
+    }
+
+    //TODO NEED TEST
+    public static void callStageAfterTick(Player player, StoryTellerQuest storyTellerQuest, Method method) {
+        int stage = storyTellerQuest.stage;
+        int detailProgress = storyTellerQuest.detailProgress;
+        CoreData coreData = Memory.getCoreData(player);
+
+        int finalProgress = StageHelper.getFinalProgress(method);
+
+        CallStageAfterTick[] l_cs = method.getAnnotationsByType(CallStageAfterTick.class);
+        for(CallStageAfterTick l_c : l_cs) {
+            int[] targetDetailProgress = l_c.progressToCall();
+            int tickWait = l_c.tick();
+
+            for(int i : targetDetailProgress) {
+
+                if(detailProgress != i && i != 0) continue;
+
+                Schedule schedule = coreData.getSchedule(l_c);
+                if(schedule == null) {
+                    // create schedule from coreData
+                    schedule = coreData.addSchedule(l_c);
+                }
+
+                int currentTick = schedule.getTick();
+                if(currentTick > tickWait) {
                     try {
                         // 메서드 실행
                         method.invoke(storyTellerQuest);
-                        // finalProgress 가 detailProgress 보다 작거나 같으면
+
                         if(finalProgress <= detailProgress) {
-                            // 다음 stage 로 업데이트 후 detailProgress 를 초기화
                             storyTellerQuest.detailProgress = 1;
                             storyTellerQuest.stage++;
                         }
-                        // 아직 마지막 스테이지에 도달하지 않았다면 detailProgress 를 업데이트
                         else storyTellerQuest.detailProgress ++;
                         return;
                     }
                     catch(Exception e) {
                         e.printStackTrace();
+                    }
+                    finally {
+                        coreData.removeSchedule(l_c);
                     }
                 }
             }

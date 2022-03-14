@@ -1,6 +1,6 @@
 # StoryTeller
 
-Spigot library for implementing quest system
+어노테이션 기반 퀘스트 시스템 구현 라이브러리
 
 ```java
 public class ExampleQuest extends StoryTellerQuest {

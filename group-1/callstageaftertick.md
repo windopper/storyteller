@@ -10,7 +10,12 @@ progressToCall이 0이라면 모든 progress에서 실행
 @Documented
 public @interface CallStageAfterTick {
     int[] progressToCall() default 0;
+    // 실행 할 프로그레스 단계
+    // 예를 들어 3을 요소로 선언하면 프로그레스 단계가 3이 되었을 때
+    // tick 만큼 대기 후 타겟 메서드 실행
+    // 0 이 선언 되었을 경우 모든 프로그레스 단계에 대하여 선언됨
     int tick();
+    // 대기 할 시간  20 tick = 1 second
 }
 ```
 

@@ -4,7 +4,7 @@ description: Spigot library for implementing quest system
 
 # StoryTeller
 
-Implementing quest system base on annotations
+Spigot library for implementing quest system
 
 ```java
 public class ExampleQuest extends StoryTellerQuest {

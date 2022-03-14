@@ -2,6 +2,8 @@
 
 어노테이션 기반 퀘스트 시스템 구현 라이브러리
 
+[ 스토리텔러 위키 바로가기 ](https://open0916.gitbook.io/storyteller/)
+
 ```java
 public class ExampleQuest extends StoryTellerQuest {
 

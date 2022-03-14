@@ -3,7 +3,7 @@ package com.kamilereon.storyteller.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kamilereon.storyteller.core.CoreData;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,10 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public class StoryTellerUtils {
-
-    public static Set<? extends StoryTellerQuest> getPlayerQuestDatas(Player player) {
-        return CoreData.getOrCreateCoreData(player).getQuests();
-    }
 
     public static boolean uploadQuestData(Player player, String json) {
         CoreData coreData = CoreData.getOrCreateCoreData(player);

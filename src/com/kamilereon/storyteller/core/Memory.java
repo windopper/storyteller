@@ -1,7 +1,5 @@
 package com.kamilereon.storyteller.core;
 
-import com.kamilereon.storyteller.annotations.CallStageAfterTick;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -13,7 +11,9 @@ public class Memory {
     static final ConcurrentHashMap<Player, CoreData> coreDatas = new ConcurrentHashMap<>();
     static final Set<Class<? extends StoryTellerQuest>> quests = new HashSet<>();
 
-    public static CoreData getCoreData(Player player) { return coreDatas.get(player); }
+    public static CoreData getCoreData(Player player) {
+        return coreDatas.get(player);
+    }
 
     @SafeVarargs
     public static void registerQuest(Class<? extends StoryTellerQuest> ...quest) { quests.addAll(Arrays.stream(quest).collect(Collectors.toSet())); }

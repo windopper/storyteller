@@ -1,7 +1,9 @@
 package com.kamilereon.storyteller.quest;
 
 import com.kamilereon.storyteller.annotations.*;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.main.StoryTeller;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 // you must extend StoryTellerQuest.class to use storyteller library
@@ -16,51 +18,29 @@ public class ExampleQuest extends StoryTellerQuest {
     // The only players who passed condition can call stage
     @QuestProgressCondition
     public boolean condition() {
-        try {
-            return levelReq < player.getLevel() && StoryTeller.getQuestFromPlayer(player, ExampleQuest2.class).isFinished();
-        }
-        catch(NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return true;
     }
 
     // call method if player enter given area
     @CallStageWhenEnterAreaRadius(progressToCall = {1, 2, 3, 4, 5}, worldName = "world", x = 136, y = 74, z = 19, radius = 3)
-    // notify finalProgress is 5 to update stage when detailProgress reaches 5
-    @StartSequence(finalProgress = 5)
+    @CallStageAfterTick(progressToCall = 6, tick = 60)
+    // notify finalProgress is 6 to update stage when detailProgress reaches 6
+    @StartSequence(finalProgress = 6)
     public void preStage() {
-        switch(detailProgress) {
-            case 1 -> {
-                //1
-            }
-            case 2 -> {
-                //2
-            }
-            case 3 -> {
-                // 3
-            }
-            case 4 -> {
-                // 4
-            }
-            case 5 -> {
-                // 5
-            }
-            // If detailProgress reaches to 5, stage will update
-        }
+        Bukkit.broadcastMessage("stage"+progress);
     }
 
-    @CallStageWhenEnterAreaRadius(worldName = "world", x = 136, y = 74, z = 19, radius = 3)
-    @CallStageWhenConditionSatisfied(progressToCall = 3, targetMethodName = "condition2")
+//    @CallStageWhenEnterAreaRadius(worldName = "world", x = 136, y = 74, z = 19, radius = 3)
+    @CallStageWhenConditionSatisfied(targetMethodName = "condition2")
     @StageSequence(stage = 1, finalProgress = 10)
     public void stage1() {
+        Bukkit.broadcastMessage("stage"+progress);
         // separate detailProgress to case by case
     }
 
     public boolean condition2() {
-        return true;
+        return player.isSneaking();
     }
-
 
     // call when
     @FinalSequence

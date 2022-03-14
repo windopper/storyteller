@@ -4,7 +4,7 @@ import com.kamilereon.storyteller.configuration.Filters;
 import com.kamilereon.storyteller.configuration.QuestFilter;
 import com.kamilereon.storyteller.core.Memory;
 import com.kamilereon.storyteller.main.StoryTeller;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.utils.StoryTellerUtils;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,7 @@ public class MainCommands {
         if(commandName.equals("story")) {
             if(args.length == 1) {
                 if(args[0].equals("save")) {
-                    Optional<String> json = StoryTellerUtils.getQuestDatasByJson(sender);
+                    Optional<String> json = StoryTeller.getQuestsByJson(sender);
                     sender.sendMessage(json.orElse("NULL 발생"));
                 }
                 else if(args[0].equals("questlist")) {

@@ -6,7 +6,7 @@ import com.kamilereon.storyteller.configuration.QuestFilter;
 import com.kamilereon.storyteller.core.CoreData;
 import com.kamilereon.storyteller.core.Memory;
 import com.kamilereon.storyteller.main.StoryTeller;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,19 +26,18 @@ public class PlayerWatcher {
             for(StoryTellerQuest storyTellerQuest : validQuests) {
 
                 int stage = storyTellerQuest.stage;
-                int detailProgress = storyTellerQuest.detailProgress;
+                int detailProgress = storyTellerQuest.progress;
 
                 Method[] methods = storyTellerQuest.getClass().getMethods();
 
                 QuestCaller.callFinalSequence(storyTellerQuest);
-
                 for(Method method : methods) {
                     method.setAccessible(true);
-                    if(!StageHelper.isSequenceCorrect(stage, detailProgress, method)) continue;
-
+                    if(!StageHelper.isSequenceCorrect(stage, method)) continue;
                     StageCaller.callStageWhenEnterAreaRadius(player, storyTellerQuest, method);
                     StageCaller.callStageWhenEnterAreaRectangle(player, storyTellerQuest, method);
                     StageCaller.callStageWhenConditionSatisfied(player, storyTellerQuest, method);
+                    StageCaller.callStageAfterTick(player, storyTellerQuest, method);
                     method.setAccessible(false);
                 }
             }

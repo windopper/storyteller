@@ -7,7 +7,7 @@ import com.kamilereon.storyteller.configuration.QuestFilter;
 import com.kamilereon.storyteller.core.CoreData;
 import com.kamilereon.storyteller.main.Initializer;
 import com.kamilereon.storyteller.main.StoryTeller;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.utils.ReflectionUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

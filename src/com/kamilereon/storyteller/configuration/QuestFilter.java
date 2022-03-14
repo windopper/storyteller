@@ -1,6 +1,6 @@
 package com.kamilereon.storyteller.configuration;
 
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 
 import java.util.Arrays;
 import java.util.HashSet;

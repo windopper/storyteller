@@ -1,6 +1,6 @@
 package com.kamilereon.storyteller.main;
 
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.core.CoreData;
 import com.kamilereon.storyteller.core.Memory;
 import org.bukkit.Bukkit;
@@ -48,7 +48,7 @@ public class Initializer {
 //    }
 
     public void initAllQuest(Player player) {
-        Set<? extends StoryTellerQuest> registeredQuests = Memory.getQuests().stream()
+        Set<StoryTellerQuest> registeredQuests = Memory.getQuests().stream()
                         .map(q -> {
                             try {
                                 return q.getConstructor(Player.class).newInstance(player);

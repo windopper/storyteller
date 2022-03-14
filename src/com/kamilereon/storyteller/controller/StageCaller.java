@@ -3,7 +3,7 @@ package com.kamilereon.storyteller.controller;
 import com.kamilereon.storyteller.annotations.*;
 import com.kamilereon.storyteller.core.CoreData;
 import com.kamilereon.storyteller.core.Memory;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.schedulers.Schedule;
 import com.kamilereon.storyteller.utils.LocationUtils;
 import org.bukkit.Bukkit;
@@ -15,9 +15,6 @@ import java.lang.reflect.Method;
 
 public class StageCaller {
     public static void callStageWhenEnterAreaRadius(Player player, StoryTellerQuest storyTellerQuest, Method method) {
-
-        int stage = storyTellerQuest.stage;
-        int detailProgress = storyTellerQuest.detailProgress;
 
         int finalProgress = StageHelper.getFinalProgress(method);
 
@@ -35,15 +32,12 @@ public class StageCaller {
             Location location = new Location(Bukkit.getWorld(world), x, y, z);
 
             if(LocationUtils.isPlayerInArea(player, location, radius)) {
-                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, finalProgress);
             }
         }
     }
 
     public static void callStageWhenEnterAreaRectangle(Player player, StoryTellerQuest storyTellerQuest, Method method) {
-
-        int stage = storyTellerQuest.stage;
-        int detailProgress = storyTellerQuest.detailProgress;
 
         int finalProgress = StageHelper.getFinalProgress(method);
 
@@ -64,15 +58,13 @@ public class StageCaller {
             Vector vector = new Vector(dx, dy, dz);
 
             if(LocationUtils.isPlayerInArea(player, location, vector)) {
-                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+                StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, finalProgress);
             }
         }
     }
 
     //TODO NEED TEST
     public static void callStageWhenConditionSatisfied(Player player, StoryTellerQuest storyTellerQuest, Method method) {
-        int stage = storyTellerQuest.stage;
-        int detailProgress = storyTellerQuest.detailProgress;
 
         int finalProgress = StageHelper.getFinalProgress(method);
 
@@ -85,7 +77,7 @@ public class StageCaller {
                 Method m = storyTellerQuest.getClass().getMethod(name);
                 boolean value = (boolean) m.invoke(storyTellerQuest);
                 if(value) {
-                    StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+                    StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, finalProgress);
                 }
             }
             catch(Exception e) {
@@ -97,9 +89,6 @@ public class StageCaller {
     //TODO NEED TEST
     public static void callStageWhenRightClickEntity(Player player, StoryTellerQuest storyTellerQuest, Method method, String entityName) {
 
-        int stage = storyTellerQuest.stage;
-        int detailProgress = storyTellerQuest.detailProgress;
-
         int finalProgress = StageHelper.getFinalProgress(method);
 
         CallStageWhenRightClickEntity[] l_cs = method.getAnnotationsByType(CallStageWhenRightClickEntity.class);
@@ -110,14 +99,14 @@ public class StageCaller {
             String name = l_c.entityName();
             if(!name.equals(entityName)) continue;
 
-            StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, detailProgress);
+            StageHelper.invokeMethodIfProgressValid(method, storyTellerQuest, targetDetailProgress, finalProgress);
         }
     }
 
-    //TODO NEED TEST
     public static void callStageAfterTick(Player player, StoryTellerQuest storyTellerQuest, Method method) {
         int stage = storyTellerQuest.stage;
-        int detailProgress = storyTellerQuest.detailProgress;
+        int detailProgress = storyTellerQuest.progress;
+        String className = storyTellerQuest.getClass().getName();
         CoreData coreData = Memory.getCoreData(player);
 
         int finalProgress = StageHelper.getFinalProgress(method);
@@ -131,10 +120,10 @@ public class StageCaller {
 
                 if(detailProgress != i && i != 0) continue;
 
-                Schedule schedule = coreData.getSchedule(l_c);
+                Schedule schedule = coreData.getSchedule(className);
                 if(schedule == null) {
                     // create schedule from coreData
-                    schedule = coreData.addSchedule(l_c);
+                    schedule = coreData.addSchedule(className);
                 }
 
                 int currentTick = schedule.getTick();
@@ -144,17 +133,17 @@ public class StageCaller {
                         method.invoke(storyTellerQuest);
 
                         if(finalProgress <= detailProgress) {
-                            storyTellerQuest.detailProgress = 1;
+                            storyTellerQuest.progress = 1;
                             storyTellerQuest.stage++;
                         }
-                        else storyTellerQuest.detailProgress ++;
+                        else storyTellerQuest.progress++;
                         return;
                     }
                     catch(Exception e) {
                         e.printStackTrace();
                     }
                     finally {
-                        coreData.removeSchedule(l_c);
+                        coreData.removeSchedule(className);
                     }
                 }
             }

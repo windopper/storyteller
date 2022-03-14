@@ -3,12 +3,14 @@ package com.kamilereon.storyteller.main;
 import com.kamilereon.storyteller.commands.MainCommands;
 import com.kamilereon.storyteller.controller.PlayerListener;
 import com.kamilereon.storyteller.events.InteractListener;
+import com.kamilereon.storyteller.file.ConfigFile;
 import com.kamilereon.storyteller.quest.ExampleQuest;
 import com.kamilereon.storyteller.quest.ExampleQuest2;
 import com.kamilereon.storyteller.schedulers.CoreScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +19,16 @@ public class StoryTellerMain extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
+//        Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), this);
+
+//        java.io.File file = new java.io.File(getDataFolder(), "config.yml");
+//        if(file.length()== 0) {
+//            config.options().copyDefaults(true);
+//            saveConfig();
+//        }
+
+        ConfigFile.getInstance().init();
+
 
         init();
     }
@@ -44,8 +55,6 @@ public class StoryTellerMain extends JavaPlugin implements Listener {
         initializer.registerCoreData();
 
         StoryTeller.registerQuest(ExampleQuest.class, ExampleQuest2.class);
-
-//        initializer.loadQuest();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             initializer.initAllQuest(player);

@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageWhenConditionSatisfied {
-    int[] progressToCall();
+    int[] progressToCall() default 0;
     String targetMethodName();
 }

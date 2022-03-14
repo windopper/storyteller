@@ -2,8 +2,9 @@ package com.kamilereon.storyteller.controller;
 
 import com.kamilereon.storyteller.annotations.StageSequence;
 import com.kamilereon.storyteller.annotations.StartSequence;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 import com.kamilereon.storyteller.utils.ReflectionUtils;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -23,11 +24,10 @@ public class StageHelper {
                 });
     }
 
-    public static boolean isSequenceCorrect(int currentStage, int currentDetailProgress, Method method) {
+    public static boolean isSequenceCorrect(int currentStage,  Method method) {
         StageSequence stageSequence = method.getAnnotation(StageSequence.class);
         StartSequence startSequence = method.getAnnotation(StartSequence.class);
         if(stageSequence == null && startSequence == null) return false;
-
         if(currentStage == 0) {
             // 아직 퀘스트가 시작되지 않았을 때 메서드에 @StartSequence 어노테이션이 존재한다면 true
             return startSequence != null;
@@ -52,7 +52,7 @@ public class StageHelper {
     }
 
     public static boolean invokeMethodIfProgressValid(Method method, StoryTellerQuest storyTellerQuest, int[] targetProgress, int finalProgress) {
-        int detailProgress = storyTellerQuest.detailProgress;
+        int detailProgress = storyTellerQuest.progress;
         for(int i : targetProgress) {
             // detailProgress 가 어노테이션이 가리키는 targetProgress 와 다르고 targetProgress 가 0이면 continue
             // targetProgress 가 0이라는 뜻은 어떤 detailProgress 에서도 실행된다는 뜻
@@ -63,11 +63,11 @@ public class StageHelper {
                 // finalProgress 가 detailProgress 보다 작거나 같으면
                 if(finalProgress <= detailProgress) {
                     // 다음 stage 로 업데이트 후 detailProgress 를 초기화
-                    storyTellerQuest.detailProgress = 1;
+                    storyTellerQuest.progress = 1;
                     storyTellerQuest.stage++;
                 }
                 // 아직 마지막 스테이지에 도달하지 않았다면 detailProgress 를 업데이트
-                else storyTellerQuest.detailProgress ++;
+                else storyTellerQuest.progress++;
                 return true;
             }
             catch(Exception e) {

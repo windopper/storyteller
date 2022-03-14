@@ -1,7 +1,7 @@
 package com.kamilereon.storyteller.configuration;
 
 import com.kamilereon.storyteller.annotations.QuestProgressCondition;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
@@ -17,11 +17,9 @@ public enum Filters {
             }
             catch(Exception e) {
                 e.printStackTrace();
-                return false;
             }
         }
-        System.out.println("There's no QuestProgressCondition annotation in registered memory");
-        return false;
+        return true;
     }),
     CANNOT_START(q -> !Filters.CAN_START.predicate.test(q)),
     NOT_STARTED(q -> q.stage == 0),

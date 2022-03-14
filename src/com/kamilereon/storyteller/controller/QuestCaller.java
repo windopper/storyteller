@@ -2,7 +2,7 @@ package com.kamilereon.storyteller.controller;
 
 import com.kamilereon.storyteller.annotations.FinalSequence;
 import com.kamilereon.storyteller.annotations.StageSequence;
-import com.kamilereon.storyteller.quest.StoryTellerQuest;
+import com.kamilereon.storyteller.core.StoryTellerQuest;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class QuestCaller {
         if(endStageSequence.isEmpty()) return;
 
         int currentStage = storyTellerQuest.stage;
-        int currentDetailProgress = storyTellerQuest.detailProgress;
+        int currentDetailProgress = storyTellerQuest.progress;
         StageSequence stageSequence = endStageSequence.get();
         int finalStage = stageSequence.stage();
         int finalProgress = stageSequence.finalProgress();
@@ -35,7 +35,7 @@ public class QuestCaller {
                 try {
                     rewardMethod.setAccessible(true);
                     rewardMethod.invoke(storyTellerQuest);
-                    storyTellerQuest.detailProgress = 1;
+                    storyTellerQuest.progress = 1;
                     storyTellerQuest.stage = -1;
                 }
                 catch(Exception e) {

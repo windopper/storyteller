@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CallStageAfterTick {
-    int[] progressToCall();
+    int[] progressToCall() default 0;
     int tick();
 }
